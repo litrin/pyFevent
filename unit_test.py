@@ -20,14 +20,27 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from distutils.core import setup, Extension
 
-module = Extension('pyf_event',
-                   sources=['pyf_event.c'])
+import unittest
+import pyf_event
 
-setup(name='PerfEvent',
-      version='0.5',
-      author='Litrin J.',
-      author_email="litrin@gmail.com",
-      ext_modules=[module]
-      )
+
+class MyTestCase(unittest.TestCase):
+    def test_HWCounter(self):
+        counter = pyf_event.HWCounter()
+        counter.start_counter(2)
+
+        self.assertEqual(counter.pid, 0)
+        self.assertEqual(counter.cpu_core, -1)
+
+        ipc = counter.get_counter()
+        print "IPC: %d" % ipc
+        print "IPC: %s" % counter.cpu_core
+        print "IPC: %d" % counter.counter
+        print "IPC: %d" % counter.pid
+
+        self.assertIsInstance(ipc, int)
+
+
+if __name__ == '__main__':
+    unittest.main()
